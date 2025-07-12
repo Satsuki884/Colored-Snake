@@ -49,28 +49,6 @@ public class SnakeHead : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B)) ChangeColor("Blue");
         if (Input.GetKeyDown(KeyCode.G)) ChangeColor("Green");
     }
-    // void FixedUpdate()
-    // {
-    //     moveDirection = inputDirection;
-    //     lastHeadPos = rb.position;
-
-    //     // Плавное движение
-    //     Vector2 newPosition = rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime;
-    //     rb.MovePosition(newPosition);
-
-    //     // Двигаем хвост
-    //     if (BodyParts.Count > 0)
-    //     {
-    //         Vector3 prevPos = lastHeadPos;
-    //         for (int i = 0; i < BodyParts.Count; i++)
-    //         {
-    //             Vector3 temp = BodyParts[i].position;
-    //             BodyParts[i].position = prevPos;
-    //             prevPos = temp;
-    //         }
-    //     }
-    // }
-
     void Move()
     {
         // Применяем направление только в начале клетки
@@ -118,9 +96,12 @@ public class SnakeHead : MonoBehaviour
         {
             Debug.Log("Game Over!");
             Time.timeScale = 0f;
+            Debug.Log("Score: " + FindObjectOfType<LeaderboardUI>());
+            FindObjectOfType<LeaderboardUI>().Show(BodyParts.Count);
         }
         else if (other.CompareTag(currentColorTag))
         {
+            FindObjectOfType<ColorBlockSpawner>().RemoveBlock(other.gameObject);
             Destroy(other.gameObject);
             Grow();
         }

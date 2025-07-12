@@ -9,6 +9,9 @@ public class ColorBlockSpawner : MonoBehaviour
     private GridManager gridManager;
     private SnakeHead snake;
 
+    private List<GameObject> spawnedBlocks = new List<GameObject>();
+    private const int maxBlocks = 10;
+
     void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
@@ -19,6 +22,7 @@ public class ColorBlockSpawner : MonoBehaviour
 
     void SpawnBlock()
     {
+        if (spawnedBlocks.Count >= maxBlocks) return;
         GameObject prefab = GetRandomPrefab();
         int maxAttempts = 50;
 
@@ -33,7 +37,8 @@ public class ColorBlockSpawner : MonoBehaviour
 
             if (!IsOccupied(worldPos))
             {
-                Instantiate(prefab, worldPos, Quaternion.identity);
+                GameObject newBlock = Instantiate(prefab, worldPos, Quaternion.identity);
+                spawnedBlocks.Add(newBlock);
                 break;
             }
         }
@@ -41,8 +46,8 @@ public class ColorBlockSpawner : MonoBehaviour
 
     GameObject GetRandomPrefab()
     {
-        int r = Random.Range(0, 3);
-        return (r == 0) ? redPrefab : (r == 1) ? yellowPrefab : bluePrefab;
+        int r = Random.Range(0, 4);
+        return (r == 0) ? redPrefab : (r == 1) ? yellowPrefab : (r == 3) ? greenPrefab : bluePrefab;
     }
 
     bool IsOccupied(Vector2 position)
@@ -60,6 +65,22 @@ public class ColorBlockSpawner : MonoBehaviour
                 return true;
         }
 
+        foreach (GameObject block in spawnedBlocks)
+        {
+            if (block == null) continue; // на случай если блок был собран
+            if (Vector2.Distance(position, block.transform.position) < 0.4f)
+                return true;
+        }
+
         return false;
+    }
+
+    public void RemoveBlock(GameObject block)
+    {
+        if (spawnedBlocks.Contains(block))
+        {
+            spawnedBlocks.Remove(block);
+            Destroy(block);
+        }
     }
 }
