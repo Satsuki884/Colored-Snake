@@ -25,6 +25,8 @@ public class SnakeHead : MonoBehaviour
     {
         sr = GetComponent<SpriteRenderer>();
         ChangeColor("Red");
+        Grow();
+        // Time.timeScale = 0f;
         currentGridPos = Vector2Int.RoundToInt(transform.position);
         transform.position = currentGridPos;
 
@@ -35,13 +37,26 @@ public class SnakeHead : MonoBehaviour
     {
         // Ввод направления
         if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && moveDirection != Vector2.down)
+        {
             inputDirection = Vector2.up;
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
         else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && moveDirection != Vector2.up)
+        {
             inputDirection = Vector2.down;
+            transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+        }
         else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && moveDirection != Vector2.right)
+        {
             inputDirection = Vector2.left;
+            transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+        }
         else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && moveDirection != Vector2.left)
+        {
             inputDirection = Vector2.right;
+            transform.rotation = Quaternion.Euler(0f, 0f, -90f);
+        }
+
 
         // Смена цвета
         if (Input.GetKeyDown(KeyCode.R)) ChangeColor("Red");
@@ -97,7 +112,7 @@ public class SnakeHead : MonoBehaviour
             Debug.Log("Game Over!");
             Time.timeScale = 0f;
             Debug.Log("Score: " + FindObjectOfType<LeaderboardUI>());
-            FindObjectOfType<LeaderboardUI>().Show(BodyParts.Count);
+            FindObjectOfType<LeaderboardUI>().Show(BodyParts.Count - 1);
         }
         else if (other.CompareTag(currentColorTag))
         {
@@ -107,7 +122,7 @@ public class SnakeHead : MonoBehaviour
         }
     }
 
-    [SerializeField] private float segmentSpacing = 0.5f; // Расстояние между частями тела
+    [SerializeField] private float segmentSpacing = 1f; // Расстояние между частями тела
 
     void Grow()
     {
@@ -116,8 +131,8 @@ public class SnakeHead : MonoBehaviour
         if (BodyParts.Count == 0)
         {
             // Первая часть: разместить сбоку от головы (например, вправо)
-            Vector3 sideOffset = (Vector3)Vector2.Perpendicular(moveDirection.normalized) * segmentSpacing;
-            newPart.transform.position = transform.position + sideOffset;
+            Vector3 sideOffset = new Vector3(1.3f, 0.5f, 0f);
+            newPart.transform.position = transform.position - sideOffset;
         }
         else
         {
@@ -127,6 +142,7 @@ public class SnakeHead : MonoBehaviour
             Vector3 direction = (lastPartPos - secondToLastPos).normalized;
             newPart.transform.position = lastPartPos - direction * segmentSpacing;
         }
+
 
         BodyParts.Add(newPart.transform);
     }

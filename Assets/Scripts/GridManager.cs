@@ -52,7 +52,7 @@ public class GridManager : MonoBehaviour
     void SpawnSnake()
     {
         Vector2 spawnPos = new Vector2(0.5f, 0.5f);
-        GameObject snake = Instantiate(snakePrefab, spawnPos, Quaternion.identity);
+        GameObject snake = Instantiate(snakePrefab, spawnPos, Quaternion.Euler(0, 0, -90));
 
         // Устанавливаем скорость в компоненте змейки
         float speed = CalculateSnakeSpeed();
@@ -60,6 +60,7 @@ public class GridManager : MonoBehaviour
         if (head != null)
         {
             head.MoveSpeed = speed;
+            // head.BodyParts.Add(snake.transform);
         }
     }
 
