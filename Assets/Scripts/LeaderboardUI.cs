@@ -31,7 +31,7 @@ public class LeaderboardUI : MonoBehaviour
     {
         currentScore = score;
         panel.SetActive(true);
-        topScoresText.text = "Загрузка...";
+        topScoresText.text = "Loading...";
 
         string savedName = PlayerPrefs.GetString("player_name", "");
 

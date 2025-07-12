@@ -67,7 +67,7 @@ public class ColorBlockSpawner : MonoBehaviour
 
         foreach (GameObject block in spawnedBlocks)
         {
-            if (block == null) continue; // на случай если блок был собран
+            if (block == null) continue;
             if (Vector2.Distance(position, block.transform.position) < 0.4f)
                 return true;
         }

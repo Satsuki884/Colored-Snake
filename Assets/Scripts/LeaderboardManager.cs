@@ -27,9 +27,9 @@ public class LeaderboardManager : MonoBehaviour
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
-            Debug.Log("✅ Score submitted or updated!");
+            Debug.Log("Score submitted or updated!");
         else
-            Debug.LogError("❌ SubmitScore error: " + request.error);
+            Debug.LogError("SubmitScore error: " + request.error);
     }
 
 
@@ -57,8 +57,8 @@ public class LeaderboardManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("❌ GetTopScores error: " + request.error);
-            targetText.text = "Ошибка загрузки рекордов.";
+            Debug.LogError("GetTopScores error: " + request.error);
+            targetText.text = "Error loading records.";
         }
     }
 
@@ -87,15 +87,15 @@ public class LeaderboardManager : MonoBehaviour
             }
 
             if (place > 0)
-                targetText.text = $"🎉 Вы на {place} месте: {username} — {score} очков";
+                targetText.text = $"You're in {place} position: {username} - {score} points.";
             else
-                targetText.text = $"⚠️ Ваш результат не в топе, но сохранён: {username} — {score}";
+                targetText.text = $"Your result is not in the top, but it is saved: {username} - {score}.";
 
         }
         else
         {
-            Debug.LogError("❌ GetPlayerRank error: " + request.error);
-            targetText.text = "Ошибка определения позиции в рейтинге.";
+            Debug.LogError("GetPlayerRank error: " + request.error);
+            targetText.text = "Error in determining the position in the ranking.";
         }
     }
 }
