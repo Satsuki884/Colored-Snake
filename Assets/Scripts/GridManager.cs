@@ -85,9 +85,9 @@ public class GridManager : MonoBehaviour
     {
         float sizeFactor = (gridSize.x + gridSize.y) * 0.5f;
 
-        float t = Mathf.InverseLerp(max, min, sizeFactor);
+        float t = Mathf.InverseLerp(min, max, sizeFactor);
 
-        return Mathf.Lerp(0.2f, 0.7f, t);
+        return Mathf.Lerp(0.2f, 0.5f, t);
     }
 
 

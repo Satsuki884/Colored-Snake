@@ -24,6 +24,7 @@ public class LeaderboardUI : MonoBehaviour
 
     void ReturnLevel()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
