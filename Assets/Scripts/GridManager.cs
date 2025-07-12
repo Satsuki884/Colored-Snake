@@ -5,17 +5,16 @@ public class GridManager : MonoBehaviour
     public GameObject wallPrefab;
     public GameObject snakePrefab;
     [SerializeField] private int max = 30;
-    [SerializeField] private int min = 10;
+    [SerializeField] private int min = 5;
 
     [HideInInspector] public Vector2Int gridSize;
     [HideInInspector] public Vector2 origin;
 
     void Awake()
     {
-        // Генерация случайного размера поля
         gridSize = new Vector2Int(
-            Random.Range(min, max + 1),
-            Random.Range(min, max + 1)
+            GetRandomOdd(),
+            GetRandomOdd()
         );
 
         origin = -new Vector2(gridSize.x, gridSize.y) * 0.5f;
@@ -23,6 +22,16 @@ public class GridManager : MonoBehaviour
         AdjustCamera();
         GenerateBorders();
         SpawnSnake();
+    }
+
+    int GetRandomOdd()
+    {
+        int randomHalf = Random.Range(min, max + 1);
+        if(randomHalf % 2 == 0)
+        {
+            randomHalf++;
+        }
+        return randomHalf;
     }
 
     void GenerateBorders()
@@ -42,7 +51,7 @@ public class GridManager : MonoBehaviour
 
     void SpawnSnake()
     {
-        Vector2 spawnPos = origin + new Vector2(1.5f, 1.5f);
+        Vector2 spawnPos = new Vector2(0.5f, 0.5f);
         GameObject snake = Instantiate(snakePrefab, spawnPos, Quaternion.identity);
 
         // Устанавливаем скорость в компоненте змейки
@@ -78,7 +87,7 @@ public class GridManager : MonoBehaviour
 
         float t = Mathf.InverseLerp(max, min, sizeFactor);
 
-        return Mathf.Lerp(0.2f, 0.5f, t);
+        return Mathf.Lerp(0.2f, 0.7f, t);
     }
 
 

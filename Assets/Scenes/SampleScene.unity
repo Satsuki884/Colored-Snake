@@ -159,7 +159,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 0.8851767, b: 0.64716977, a: 0}
+  m_BackGroundColor: {r: 1, g: 0.64705884, b: 0.9931805, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -246,9 +246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 2130050773457431983, guid: ab744fa5c37122043ac2c431d35e7586, type: 3}
   snakePrefab: {fileID: 3915685967544523665, guid: 59dc9a5464dce0c4f874542b330c8dd5, type: 3}
-  max: 30
-  min: 10
-  cellSize: 1
+  max: 15
+  min: 5
   gridSize: {x: 0, y: 0}
   origin: {x: 0, y: 0}
 --- !u!4 &741209043

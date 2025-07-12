@@ -29,16 +29,15 @@ public class ColorBlockSpawner : MonoBehaviour
                 Random.Range(0, gridManager.gridSize.y)
             );
 
-            Vector2 cellCenterWorld = gridManager.origin + new Vector2(gridPos.x, gridPos.y) + Vector2.one * 0.5f;
+            Vector2 worldPos = gridManager.origin + new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f);
 
-            if (!IsOccupied(cellCenterWorld))
+            if (!IsOccupied(worldPos))
             {
-                Instantiate(prefab, cellCenterWorld, Quaternion.identity);
+                Instantiate(prefab, worldPos, Quaternion.identity);
                 break;
             }
         }
     }
-
 
     GameObject GetRandomPrefab()
     {
