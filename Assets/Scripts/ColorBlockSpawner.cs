@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ColorBlockSpawner : MonoBehaviour
 {
-    public GameObject redPrefab, yellowPrefab, bluePrefab;
+    public GameObject redPrefab, yellowPrefab, bluePrefab, greenPrefab;
     public float spawnInterval = 3f;
     public Vector2 spawnAreaMin, spawnAreaMax;
 
