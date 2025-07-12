@@ -13,7 +13,7 @@ public class LeaderboardManager : MonoBehaviour
     public IEnumerator SubmitScore(string username, int score)
     {
         string json = JsonUtility.ToJson(new ScoreData(username, score));
-        string endpoint = $"{supabaseUrl}/rest/v1/scores";
+        string endpoint = $"{supabaseUrl}/rest/v1/scores?on_conflict=username";
 
         var request = new UnityWebRequest(endpoint, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
@@ -21,15 +21,17 @@ public class LeaderboardManager : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
         request.SetRequestHeader("apikey", supabaseKey);
-        request.SetRequestHeader("Authorization", "Bearer " + supabaseKey);
+        // request.SetRequestHeader("Authorization", "Bearer " + supabaseKey);
+        request.SetRequestHeader("Prefer", "resolution=merge-duplicates");
 
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
-            Debug.Log("✅ Score submitted!");
+            Debug.Log("✅ Score submitted or updated!");
         else
             Debug.LogError("❌ SubmitScore error: " + request.error);
     }
+
 
     public IEnumerator GetTopScores(TMP_Text targetText)
     {

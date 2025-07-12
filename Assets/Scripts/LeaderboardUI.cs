@@ -19,7 +19,12 @@ public class LeaderboardUI : MonoBehaviour
     private void Start()
     {
         panel.SetActive(false);
-        restartButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().name));
+        restartButton.onClick.AddListener(ReturnLevel);
+    }
+
+    void ReturnLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void Show(int score)
