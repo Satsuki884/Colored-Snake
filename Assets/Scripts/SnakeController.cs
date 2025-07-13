@@ -42,22 +42,22 @@ public class SnakeController : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && moveDirection != Vector2.down)
         {
             inputDirection = Vector2.up;
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            // transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
         else if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && moveDirection != Vector2.up)
         {
             inputDirection = Vector2.down;
-            transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+            // transform.rotation = Quaternion.Euler(0f, 0f, 180f);
         }
         else if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && moveDirection != Vector2.right)
         {
             inputDirection = Vector2.left;
-            transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+            // transform.rotation = Quaternion.Euler(0f, 0f, 90f);
         }
         else if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && moveDirection != Vector2.left)
         {
             inputDirection = Vector2.right;
-            transform.rotation = Quaternion.Euler(0f, 0f, -90f);
+            // transform.rotation = Quaternion.Euler(0f, 0f, -90f);
         }
 
 
@@ -74,6 +74,15 @@ public class SnakeController : MonoBehaviour
         {
             moveDirection = inputDirection;
         }
+
+        if (moveDirection == Vector2.up)
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        else if (moveDirection == Vector2.down)
+            transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+        else if (moveDirection == Vector2.left)
+            transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+        else if (moveDirection == Vector2.right)
+            transform.rotation = Quaternion.Euler(0f, 0f, -90f);
 
         Vector2 nextPosition = currentGridPos + moveDirection;
 
