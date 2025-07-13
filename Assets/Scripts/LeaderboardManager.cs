@@ -33,9 +33,9 @@ public class LeaderboardManager : MonoBehaviour
     }
 
 
-    public IEnumerator GetTopScores(TMP_Text targetText)
+    public IEnumerator GetTopScores(int topCount, TMP_Text targetText)
     {
-        string url = $"{supabaseUrl}/rest/v1/scores?select=*&order=score.desc&limit=10";
+        string url = $"{supabaseUrl}/rest/v1/scores?select=*&order=score.desc&limit={topCount}";
         UnityWebRequest request = UnityWebRequest.Get(url);
         request.SetRequestHeader("apikey", supabaseKey);
         request.SetRequestHeader("Authorization", "Bearer " + supabaseKey);
@@ -98,6 +98,41 @@ public class LeaderboardManager : MonoBehaviour
             targetText.text = "Error in determining the position in the ranking.";
         }
     }
+
+    public IEnumerator GetCurrentPlayerRank(string username, TMP_Text targetText)
+    {
+        string url = $"{supabaseUrl}/rest/v1/scores?select=username,score&order=score.desc";
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        request.SetRequestHeader("apikey", supabaseKey);
+        request.SetRequestHeader("Authorization", "Bearer " + supabaseKey);
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string json = request.downloadHandler.text;
+            ScoreData[] scores = JsonHelper.FromJson<ScoreData>(json);
+
+            int place = -1;
+            int foundScore = 0;
+
+            for (int i = 0; i < scores.Length; i++)
+            {
+                if (scores[i].username == username)
+                {
+                    place = i + 1;
+                    foundScore = scores[i].score;
+                    break;
+                }
+            }
+
+            if (place > 0)
+                targetText.text = $"{place}. {username} — {foundScore}";
+            else
+                targetText.text = "-. - -";
+        }
+    }
+
 }
 
 [System.Serializable]

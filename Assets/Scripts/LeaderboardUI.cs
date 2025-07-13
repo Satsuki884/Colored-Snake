@@ -6,12 +6,13 @@ using System.Collections;
 
 public class LeaderboardUI : MonoBehaviour
 {
-    public GameObject panel;
-    public TMP_Text topScoresText;
-    public TMP_InputField nameInputField;
-    public Button submitButton;
-    public TMP_Text playerRankText;
-    public Button restartButton;
+    [SerializeField] private GameObject panel;
+    [SerializeField] private TMP_Text topScoresText;
+    [SerializeField] private TMP_InputField nameInputField;
+    [SerializeField] private Button submitButton;
+    [SerializeField] private TMP_Text playerRankText;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button mainMenuButton;
 
     private int currentScore;
     [SerializeField] private LeaderboardManager leaderboardManager;
@@ -20,6 +21,7 @@ public class LeaderboardUI : MonoBehaviour
     {
         panel.SetActive(false);
         restartButton.onClick.AddListener(ReturnLevel);
+        mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene("MainMenu"));
     }
 
     void ReturnLevel()
@@ -78,6 +80,6 @@ public class LeaderboardUI : MonoBehaviour
 
     private IEnumerator GetTop10Scores()
     {
-        yield return leaderboardManager.GetTopScores(topScoresText);
+        yield return leaderboardManager.GetTopScores(5, topScoresText);
     }
 }
