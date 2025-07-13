@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
-public class SnakeHead : MonoBehaviour
+public class SnakeController : MonoBehaviour
 {
+    // Событие для уведомления об изменении количества частей тела
+    public event Action<int> OnTailCountChanged;
 
     [Header("Настройки")]
     [HideInInspector] public float MoveSpeed;
@@ -112,7 +115,13 @@ public class SnakeHead : MonoBehaviour
             Debug.Log("Game Over!");
             Time.timeScale = 0f;
             Debug.Log("Score: " + FindObjectOfType<LeaderboardUI>());
-            FindObjectOfType<LeaderboardUI>().Show(BodyParts.Count - 1);
+            var score = BodyParts.Count - 1;
+            FindObjectOfType<LeaderboardUI>().Show(score);
+            if (score > PlayerPrefs.GetInt("Record", 0))
+            {
+                PlayerPrefs.SetInt("Record", score);
+                PlayerPrefs.Save();
+            }
         }
         else if (other.CompareTag(currentColorTag))
         {
@@ -145,6 +154,8 @@ public class SnakeHead : MonoBehaviour
 
 
         BodyParts.Add(newPart.transform);
+
+        OnTailCountChanged?.Invoke(BodyParts.Count - 1);
     }
 
 

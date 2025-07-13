@@ -56,7 +56,7 @@ public class GridManager : MonoBehaviour
 
         // Устанавливаем скорость в компоненте змейки
         float speed = CalculateSnakeSpeed();
-        SnakeHead head = snake.GetComponent<SnakeHead>();
+        SnakeController head = snake.GetComponent<SnakeController>();
         if (head != null)
         {
             head.MoveSpeed = speed;

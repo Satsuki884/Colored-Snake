@@ -7,7 +7,7 @@ public class ColorBlockSpawner : MonoBehaviour
     public float spawnInterval = 3f;
 
     private GridManager gridManager;
-    private SnakeHead snake;
+    private SnakeController snake;
 
     private List<GameObject> spawnedBlocks = new List<GameObject>();
     private const int maxBlocks = 10;
@@ -15,7 +15,7 @@ public class ColorBlockSpawner : MonoBehaviour
     void Start()
     {
         gridManager = FindObjectOfType<GridManager>();
-        snake = FindObjectOfType<SnakeHead>();
+        snake = FindObjectOfType<SnakeController>();
 
         InvokeRepeating(nameof(SpawnBlock), 1f, spawnInterval);
     }
