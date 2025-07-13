@@ -63,8 +63,8 @@ public class SnakeController : MonoBehaviour
 
         // Смена цвета
         if (Input.GetKeyDown(KeyCode.R)) ChangeColor("Red");
-        if (Input.GetKeyDown(KeyCode.Y)) ChangeColor("Yellow");
-        if (Input.GetKeyDown(KeyCode.B)) ChangeColor("Blue");
+        if (Input.GetKeyDown(KeyCode.Q)) ChangeColor("Yellow");
+        if (Input.GetKeyDown(KeyCode.C)) ChangeColor("Blue");
         if (Input.GetKeyDown(KeyCode.G)) ChangeColor("Green");
     }
     void Move()
