@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UIElements;
 
 public class LeaderboardManager : MonoBehaviour
 {
@@ -12,8 +13,9 @@ public class LeaderboardManager : MonoBehaviour
 
     public IEnumerator SubmitScore(string username, int score)
     {
+        username = username.ToUpper();
         string json = JsonUtility.ToJson(new ScoreData(username, score));
-        string endpoint = $"{supabaseUrl}/rest/v1/scores?on_conflict=username";
+        string endpoint = $"{supabaseUrl}/rest/v1/scores";
 
         var request = new UnityWebRequest(endpoint, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
@@ -31,6 +33,30 @@ public class LeaderboardManager : MonoBehaviour
         else
             Debug.LogError("SubmitScore error: " + request.error);
     }
+
+    public IEnumerator UpdateScore(int score)
+    {
+        var username = PlayerPrefs.GetString("player_name", "Unknown");
+        username = username.ToUpper();
+        string json = JsonUtility.ToJson(new ScoreData(username, score));
+        string endpoint = $"{supabaseUrl}/rest/v1/scores?username=eq.{username}";
+
+        var request = new UnityWebRequest(endpoint, "PATCH");
+        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        request.SetRequestHeader("apikey", supabaseKey);
+        request.SetRequestHeader("Prefer", "return=representation");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+            Debug.Log("Score updated!");
+        else
+            Debug.LogError("SubmitScore error: " + request.error);
+    }
+
 
 
     public IEnumerator GetTopScores(int topCount, TMP_Text targetText)
@@ -64,6 +90,8 @@ public class LeaderboardManager : MonoBehaviour
 
     public IEnumerator GetPlayerRank(string username, int score, TMP_Text targetText)
     {
+        username = username.ToUpper();
+        targetText.text = "Loading...";
         string url = $"{supabaseUrl}/rest/v1/scores?select=username,score&order=score.desc";
         UnityWebRequest request = UnityWebRequest.Get(url);
         request.SetRequestHeader("apikey", supabaseKey);
@@ -101,6 +129,8 @@ public class LeaderboardManager : MonoBehaviour
 
     public IEnumerator GetCurrentPlayerRank(string username, TMP_Text targetText)
     {
+        username = username.ToUpper();
+        targetText.text = "Loading...";
         string url = $"{supabaseUrl}/rest/v1/scores?select=username,score&order=score.desc";
         UnityWebRequest request = UnityWebRequest.Get(url);
         request.SetRequestHeader("apikey", supabaseKey);
@@ -132,6 +162,37 @@ public class LeaderboardManager : MonoBehaviour
                 targetText.text = "-. - -";
         }
     }
+
+    public IEnumerator CheckUsernameExists(string username, System.Action<bool> callback)
+    {
+        username = username.ToUpper();
+        string url = $"{supabaseUrl}/rest/v1/scores?select=username&username=eq.{username}";
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        request.SetRequestHeader("apikey", supabaseKey);
+        request.SetRequestHeader("Authorization", "Bearer " + supabaseKey);
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string json = request.downloadHandler.text;
+
+            if (!string.IsNullOrEmpty(json) && json != "[]")
+            {
+                callback(true);
+            }
+            else
+            {
+                callback(false);
+            }
+        }
+        else
+        {
+            Debug.LogError("CheckUsernameExists error: " + request.error);
+            callback(true); // Лучше заблокировать регистрацию при ошибке
+        }
+    }
+
 
 }
 

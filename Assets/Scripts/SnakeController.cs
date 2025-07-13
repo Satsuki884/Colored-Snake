@@ -117,11 +117,11 @@ public class SnakeController : MonoBehaviour
             Debug.Log("Score: " + FindObjectOfType<LeaderboardUI>());
             var score = BodyParts.Count - 1;
             FindObjectOfType<LeaderboardUI>().Show(score);
-            if (score > PlayerPrefs.GetInt("Record", 0))
-            {
-                PlayerPrefs.SetInt("Record", score);
-                PlayerPrefs.Save();
-            }
+            // if (score > PlayerPrefs.GetInt("Record", 0))
+            // {
+            //     PlayerPrefs.SetInt("Record", score);
+            //     PlayerPrefs.Save();
+            // }
         }
         else if (other.CompareTag(currentColorTag))
         {

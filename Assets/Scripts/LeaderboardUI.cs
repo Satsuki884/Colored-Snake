@@ -9,6 +9,7 @@ public class LeaderboardUI : MonoBehaviour
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text topScoresText;
     [SerializeField] private TMP_InputField nameInputField;
+    [SerializeField] private Color errorColor;
     [SerializeField] private Button submitButton;
     [SerializeField] private TMP_Text playerRankText;
     [SerializeField] private Button restartButton;
@@ -21,7 +22,7 @@ public class LeaderboardUI : MonoBehaviour
     {
         panel.SetActive(false);
         restartButton.onClick.AddListener(ReturnLevel);
-        mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene("MainMenu"));
+        mainMenuButton.onClick.AddListener(() => SceneManager.LoadScene("Menu"));
     }
 
     void ReturnLevel()
@@ -40,15 +41,26 @@ public class LeaderboardUI : MonoBehaviour
 
         if (string.IsNullOrEmpty(savedName))
         {
+            playerRankText.gameObject.SetActive(false);
             nameInputField.gameObject.SetActive(true);
             submitButton.gameObject.SetActive(true);
             submitButton.onClick.AddListener(OnSubmitClicked);
+            PlayerPrefs.SetInt("Record", score);
+            PlayerPrefs.Save();
         }
         else
         {
+            playerRankText.gameObject.SetActive(true);
+            playerRankText.text = $"Your result is not in the top, but it is saved: {savedName} - {score}.";
             nameInputField.gameObject.SetActive(false);
             submitButton.gameObject.SetActive(false);
-            SubmitScore(savedName);
+            if (score > PlayerPrefs.GetInt("Record", 0))
+            {
+                PlayerPrefs.SetInt("Record", score);
+                PlayerPrefs.Save();
+                UpdateScore(savedName, score);
+            }
+
         }
 
         StartCoroutine(GetTop10Scores());
@@ -59,10 +71,23 @@ public class LeaderboardUI : MonoBehaviour
         string enteredName = nameInputField.text;
         if (!string.IsNullOrEmpty(enteredName))
         {
-            PlayerPrefs.SetString("player_name", enteredName);
-            nameInputField.gameObject.SetActive(false);
-            submitButton.gameObject.SetActive(false);
-            SubmitScore(enteredName);
+            StartCoroutine(leaderboardManager.CheckUsernameExists(enteredName, (exists) =>
+                {
+                    if (exists)
+                    {
+                        nameInputField.text = "";
+                        nameInputField.placeholder.GetComponent<TMP_Text>().text = "Name taken. Try another";
+                        nameInputField.placeholder.GetComponent<TMP_Text>().color = errorColor;
+                    }
+                    else
+                    {
+                        PlayerPrefs.SetString("player_name", enteredName);
+                        nameInputField.gameObject.SetActive(false);
+                        submitButton.gameObject.SetActive(false);
+                        playerRankText.gameObject.SetActive(true);
+                        SubmitScore(enteredName);
+                    }
+                }));
         }
     }
 
@@ -74,6 +99,18 @@ public class LeaderboardUI : MonoBehaviour
     private IEnumerator SubmitAndShowRank(string name, int score)
     {
         yield return StartCoroutine(leaderboardManager.SubmitScore(name, score));
+        yield return StartCoroutine(leaderboardManager.GetPlayerRank(name, score, playerRankText));
+        yield return StartCoroutine(GetTop10Scores());
+    }
+
+    private void UpdateScore(string name, int score)
+    {
+        StartCoroutine(UpdateAndShowRank(name, score));
+    }
+
+    private IEnumerator UpdateAndShowRank(string name, int score)
+    {
+        yield return StartCoroutine(leaderboardManager.UpdateScore(score));
         yield return StartCoroutine(leaderboardManager.GetPlayerRank(name, score, playerRankText));
         yield return StartCoroutine(GetTop10Scores());
     }
