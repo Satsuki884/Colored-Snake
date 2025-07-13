@@ -31,6 +31,7 @@ public class Bomb : MonoBehaviour
         {
             FindObjectOfType<BlockSpawner>().RemoveBlock(gameObject);
             Destroy(gameObject);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.Bomb);
             other.gameObject.GetComponent<SnakeController>().GameOver();
         }
         else if (other.CompareTag("Shield"))

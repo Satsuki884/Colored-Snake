@@ -5,7 +5,7 @@ public class BlueFood : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (
-            other.CompareTag("Yellow")||
+            other.CompareTag("Yellow") ||
             other.CompareTag("Red") ||
             other.CompareTag("Green"))
         {

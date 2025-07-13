@@ -12,6 +12,7 @@ public class Shield : MonoBehaviour
             other.CompareTag("Green") ||
             other.CompareTag("Red"))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.Shield);
             FindObjectOfType<BlockSpawner>().RemoveBlock(gameObject);
             Destroy(gameObject);
             other.gameObject.GetComponent<SnakeController>().GetShield(shieldColor);

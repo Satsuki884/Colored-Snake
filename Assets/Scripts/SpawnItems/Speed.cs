@@ -1,9 +1,7 @@
 using UnityEngine;
 
-public class Speed : MonoBehaviour
+public class Buff : MonoBehaviour
 {
-
-    [SerializeField] private float speedMultiplier = 2f;
     void OnTriggerEnter2D(Collider2D other)
     {
         if (
@@ -12,9 +10,10 @@ public class Speed : MonoBehaviour
             other.CompareTag("Green") ||
             other.CompareTag("Red"))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.Speed);
             FindObjectOfType<BlockSpawner>().RemoveBlock(gameObject);
             Destroy(gameObject);
-            other.gameObject.GetComponent<SnakeController>().GetSpeedBoost(speedMultiplier);
+            other.gameObject.GetComponent<SnakeController>().GetEatBoost();
         }
     }
 }

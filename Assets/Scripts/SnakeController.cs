@@ -9,6 +9,7 @@ public class SnakeController : MonoBehaviour
 
     [Header("Настройки")]
     [HideInInspector] public float MoveSpeed;
+    private int eatMultiplier = 1;
     [SerializeField] private GameObject bodyPrefab;
 
     [Header("Цвета")]
@@ -131,6 +132,7 @@ public class SnakeController : MonoBehaviour
     {
         if (other.CompareTag("Border"))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.Wall);
             GameOver();
         }
     }
@@ -146,19 +148,26 @@ public class SnakeController : MonoBehaviour
             // Первая часть: разместить сбоку от головы (например, вправо)
             Vector3 sideOffset = new Vector3(1.3f, 0.5f, 0f);
             newPart.transform.position = transform.position - sideOffset;
-
+            BodyParts.Add(newPart.transform);
         }
         else
         {
-            // Остальные части: на расстоянии segmentSpacing за последней частью
-            Vector3 lastPartPos = BodyParts[^1].position;
-            Vector3 secondToLastPos = BodyParts.Count > 1 ? BodyParts[^2].position : transform.position;
-            Vector3 direction = (lastPartPos - secondToLastPos).normalized;
-            newPart.transform.position = lastPartPos - direction * segmentSpacing;
+            for (int i = 0; i < eatMultiplier; i++)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.Eat);
+                Vector3 lastPartPos = BodyParts[^1].position;
+                Vector3 secondToLastPos = BodyParts.Count > 1 ? BodyParts[^2].position : transform.position;
+                Vector3 direction = (lastPartPos - secondToLastPos).normalized;
+                newPart.transform.position = lastPartPos - direction * segmentSpacing;
+                BodyParts.Add(newPart.transform);
+            }
+            // AudioManager.Instance.PlaySFX(AudioManager.Instance.Eat);
+            // Vector3 lastPartPos = BodyParts[^1].position;
+            // Vector3 secondToLastPos = BodyParts.Count > 1 ? BodyParts[^2].position : transform.position;
+            // Vector3 direction = (lastPartPos - secondToLastPos).normalized;
+            // newPart.transform.position = lastPartPos - direction * segmentSpacing;
         }
 
-
-        BodyParts.Add(newPart.transform);
 
         OnTailCountChanged?.Invoke(BodyParts.Count - 1);
 
@@ -180,20 +189,16 @@ public class SnakeController : MonoBehaviour
         gameObject.tag = currentColorTag;
     }
 
-    public void GetSpeedBoost(float multiplier)
+    public void GetEatBoost()
     {
-        StartCoroutine(SpeedBoostRoutine(multiplier));
+        StartCoroutine(SpeedBoostRoutine());
     }
 
-    private System.Collections.IEnumerator SpeedBoostRoutine(float multiplier)
+    private System.Collections.IEnumerator SpeedBoostRoutine()
     {
-        float originalSpeed = MoveSpeed;
-        Debug.Log("Speed Boost Activated: " + multiplier);
-        Debug.Log("Original Speed: " + originalSpeed);
-        MoveSpeed *= multiplier;
-        Debug.Log("New Speed: " + MoveSpeed);
+        eatMultiplier++;
         yield return new WaitForSeconds(3f);
-        MoveSpeed = originalSpeed;
+        eatMultiplier--;
     }
 
 
