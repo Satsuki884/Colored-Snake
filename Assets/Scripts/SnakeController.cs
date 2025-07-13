@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 public class SnakeController : MonoBehaviour
 {
@@ -24,7 +25,6 @@ public class SnakeController : MonoBehaviour
     private Vector2 inputDirection = Vector2.right;
     private string currentColorTag = "Red";
     private Vector2 currentGridPos;
-
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -36,7 +36,6 @@ public class SnakeController : MonoBehaviour
 
         InvokeRepeating(nameof(Move), MoveSpeed, MoveSpeed);
     }
-
     void Update()
     {
         // Ввод направления
