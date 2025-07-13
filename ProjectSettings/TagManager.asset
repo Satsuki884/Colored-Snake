@@ -9,6 +9,8 @@ TagManager:
   - Yellow
   - Green
   - Border
+  - Body
+  - Shield
   layers:
   - Default
   - TransparentFX

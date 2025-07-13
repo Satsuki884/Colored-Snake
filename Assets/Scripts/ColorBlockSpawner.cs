@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ColorBlockSpawner : MonoBehaviour
+public class BlockSpawner : MonoBehaviour
 {
-    public GameObject redPrefab, yellowPrefab, bluePrefab, greenPrefab;
-    public float spawnInterval = 3f;
+    [SerializeField] private List<GameObject> colorBlocksPrefabs;
+    [SerializeField] private List<GameObject> additionalBlocksPrefabs;
+    [SerializeField] private GameObject blocksParent;
+
+    [SerializeField] private float spawnInterval = 3f;
 
     private GridManager gridManager;
     private SnakeController snake;
@@ -38,6 +41,7 @@ public class ColorBlockSpawner : MonoBehaviour
             if (!IsOccupied(worldPos))
             {
                 GameObject newBlock = Instantiate(prefab, worldPos, Quaternion.identity);
+                newBlock.transform.SetParent(blocksParent.transform);
                 spawnedBlocks.Add(newBlock);
                 break;
             }
@@ -46,9 +50,21 @@ public class ColorBlockSpawner : MonoBehaviour
 
     GameObject GetRandomPrefab()
     {
-        int r = Random.Range(0, 4);
-        return (r == 0) ? redPrefab : (r == 1) ? yellowPrefab : (r == 3) ? greenPrefab : bluePrefab;
+        float chance = Random.value; // от 0.0 до 1.0
+
+        if (chance < 0.9f && colorBlocksPrefabs.Count > 0)
+        {
+            int index = Random.Range(0, colorBlocksPrefabs.Count);
+            return colorBlocksPrefabs[index];
+        }
+        else if (additionalBlocksPrefabs.Count > 0)
+        {
+            int index = Random.Range(0, additionalBlocksPrefabs.Count);
+            return additionalBlocksPrefabs[index];
+        }
+        return null;
     }
+
 
     bool IsOccupied(Vector2 position)
     {

@@ -634,6 +634,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300437663}
   m_CullTransparentMesh: 1
+--- !u!1 &360645024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 360645025}
+  m_Layer: 0
+  m_Name: Items
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &360645025
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360645024}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &460943715
 GameObject:
   m_ObjectHideFlags: 0
@@ -1056,6 +1087,7 @@ MonoBehaviour:
   snakePrefab: {fileID: 3915685967544523665, guid: 59dc9a5464dce0c4f874542b330c8dd5, type: 3}
   max: 30
   min: 10
+  wallsParent: {fileID: 1731741848}
   gridSize: {x: 0, y: 0}
   origin: {x: 0, y: 0}
 --- !u!4 &741209043
@@ -1352,7 +1384,7 @@ GameObject:
   - component: {fileID: 1237758880}
   - component: {fileID: 1237758879}
   m_Layer: 0
-  m_Name: ColorBlockSpawner
+  m_Name: BlockSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1370,10 +1402,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5116991a618c1874a95b45c441bcdee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  redPrefab: {fileID: 3645390171549257162, guid: cb8a74b271383fb46b28025c2c2ad7b6, type: 3}
-  yellowPrefab: {fileID: 2371978074226498249, guid: d85e4df27f63ced429bb09e04fc9fee1, type: 3}
-  bluePrefab: {fileID: 917200359058101694, guid: 05f11a0aacd8d1c4badf5c0529d4b255, type: 3}
-  greenPrefab: {fileID: 6088101431909847439, guid: 36d0207e74b84294bb45232d852c026f, type: 3}
+  colorBlocksPrefabs:
+  - {fileID: 917200359058101694, guid: 05f11a0aacd8d1c4badf5c0529d4b255, type: 3}
+  - {fileID: 6088101431909847439, guid: 36d0207e74b84294bb45232d852c026f, type: 3}
+  - {fileID: 3645390171549257162, guid: cb8a74b271383fb46b28025c2c2ad7b6, type: 3}
+  - {fileID: 2371978074226498249, guid: d85e4df27f63ced429bb09e04fc9fee1, type: 3}
+  additionalBlocksPrefabs:
+  - {fileID: 5518838961282719786, guid: 174beeeb4a09892478b4ea8196c433ca, type: 3}
+  - {fileID: 2258589687493822133, guid: 28b482aa2cd1ddc41a10a904f3f9be8d, type: 3}
+  - {fileID: 322035914965600419, guid: a4c3bd2d160736246b098fafc5ec87d0, type: 3}
+  - {fileID: 2935488172725938340, guid: 7a0ce7e6b6ccdd34c9475350afa59836, type: 3}
+  blocksParent: {fileID: 360645024}
   spawnInterval: 3
 --- !u!4 &1237758880
 Transform:
@@ -2334,6 +2373,37 @@ MonoBehaviour:
   menuButton: {fileID: 1569897303}
   continueButton: {fileID: 1278316850}
   restartButton: {fileID: 460943717}
+--- !u!1 &1731741848
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1731741849}
+  m_Layer: 0
+  m_Name: Walls
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1731741849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1731741848}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1745146378
 GameObject:
   m_ObjectHideFlags: 0
@@ -4581,3 +4651,5 @@ SceneRoots:
   - {fileID: 1562013404}
   - {fileID: 699032598}
   - {fileID: 2053302136}
+  - {fileID: 360645025}
+  - {fileID: 1731741849}

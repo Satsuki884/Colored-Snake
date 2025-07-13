@@ -94,46 +94,50 @@ public class SnakeController : MonoBehaviour
     void ChangeColor(string colorTag)
     {
         currentColorTag = colorTag;
+        gameObject.tag = colorTag;
+
+        Color newColor = Color.white;
+
         switch (colorTag)
         {
-
-            case "Red": sr.color = redColor; break;
-            case "Yellow": sr.color = yellowColor; break;
-            case "Blue": sr.color = blueColor; break;
-            case "Green": sr.color = greenColor; break;
+            case "Red": newColor = redColor; break;
+            case "Yellow": newColor = yellowColor; break;
+            case "Blue": newColor = blueColor; break;
+            case "Green": newColor = greenColor; break;
         }
+
+        sr.color = newColor;
+
+        // Меняем цвет у всех частей тела
+        foreach (var part in BodyParts)
+        {
+            var partSr = part.GetComponent<SpriteRenderer>();
+            if (partSr != null)
+                partSr.color = newColor;
+        }
+    }
+
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over!");
+        Time.timeScale = 0f;
+        Debug.Log("Score: " + FindObjectOfType<LeaderboardUI>());
+        var score = BodyParts.Count - 1;
+        FindObjectOfType<LeaderboardUI>().Show(score);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Border") ||
-            (other.CompareTag("Red") && currentColorTag != "Red") ||
-            (other.CompareTag("Yellow") && currentColorTag != "Yellow") ||
-            (other.CompareTag("Blue") && currentColorTag != "Blue") ||
-            (other.CompareTag("Green") && currentColorTag != "Green"))
+        if (other.CompareTag("Border"))
         {
-            Debug.Log("Game Over!");
-            Time.timeScale = 0f;
-            Debug.Log("Score: " + FindObjectOfType<LeaderboardUI>());
-            var score = BodyParts.Count - 1;
-            FindObjectOfType<LeaderboardUI>().Show(score);
-            // if (score > PlayerPrefs.GetInt("Record", 0))
-            // {
-            //     PlayerPrefs.SetInt("Record", score);
-            //     PlayerPrefs.Save();
-            // }
-        }
-        else if (other.CompareTag(currentColorTag))
-        {
-            FindObjectOfType<ColorBlockSpawner>().RemoveBlock(other.gameObject);
-            Destroy(other.gameObject);
-            Grow();
+            GameOver();
         }
     }
 
-    [SerializeField] private float segmentSpacing = 1f; // Расстояние между частями тела
+    [SerializeField] private float segmentSpacing = 1f;
 
-    void Grow()
+    public void Grow()
     {
         GameObject newPart = Instantiate(bodyPrefab);
 
@@ -142,6 +146,7 @@ public class SnakeController : MonoBehaviour
             // Первая часть: разместить сбоку от головы (например, вправо)
             Vector3 sideOffset = new Vector3(1.3f, 0.5f, 0f);
             newPart.transform.position = transform.position - sideOffset;
+
         }
         else
         {
@@ -156,6 +161,39 @@ public class SnakeController : MonoBehaviour
         BodyParts.Add(newPart.transform);
 
         OnTailCountChanged?.Invoke(BodyParts.Count - 1);
+
+        ChangeColor(currentColorTag);
+    }
+
+    public void GetShield(Color shieldColor)
+    {
+        StartCoroutine(ShieldRoutine(shieldColor));
+    }
+
+    private System.Collections.IEnumerator ShieldRoutine(Color shieldColor)
+    {
+        Color originalColor = sr.color;
+        sr.color = shieldColor;
+        gameObject.tag = "Shield";
+        yield return new WaitForSeconds(5f);
+        sr.color = originalColor;
+        gameObject.tag = currentColorTag;
+    }
+
+    public void GetSpeedBoost(float multiplier)
+    {
+        StartCoroutine(SpeedBoostRoutine(multiplier));
+    }
+
+    private System.Collections.IEnumerator SpeedBoostRoutine(float multiplier)
+    {
+        float originalSpeed = MoveSpeed;
+        Debug.Log("Speed Boost Activated: " + multiplier);
+        Debug.Log("Original Speed: " + originalSpeed);
+        MoveSpeed *= multiplier;
+        Debug.Log("New Speed: " + MoveSpeed);
+        yield return new WaitForSeconds(3f);
+        MoveSpeed = originalSpeed;
     }
 
 

@@ -6,6 +6,7 @@ public class GridManager : MonoBehaviour
     public GameObject snakePrefab;
     [SerializeField] private int max = 30;
     [SerializeField] private int min = 5;
+    [SerializeField] private GameObject wallsParent;
 
     [HideInInspector] public Vector2Int gridSize;
     [HideInInspector] public Vector2 origin;
@@ -43,7 +44,8 @@ public class GridManager : MonoBehaviour
                 if (x == -1 || y == -1 || x == gridSize.x || y == gridSize.y)
                 {
                     Vector2 pos = origin + new Vector2(x + 0.5f, y + 0.5f);
-                    Instantiate(wallPrefab, pos, Quaternion.identity);
+                    var wall = Instantiate(wallPrefab, pos, Quaternion.identity);
+                    wall.transform.SetParent(wallsParent.transform);
                 }
             }
         }
@@ -88,7 +90,7 @@ public class GridManager : MonoBehaviour
 
         float t = Mathf.InverseLerp(min, max, sizeFactor);
 
-        return Mathf.Lerp(0.2f, 0.5f, t);
+        return Mathf.Lerp(0.2f, 0.4f, t);
     }
 
 
