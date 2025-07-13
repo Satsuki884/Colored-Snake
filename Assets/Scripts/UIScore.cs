@@ -16,8 +16,8 @@ public class UIScore : MonoBehaviour
         {
             snakeController.OnTailCountChanged += UpdateScoreUI;
         }
-        // recordText.text = PlayerPrefs.GetInt("Record", 0).ToString();
-        // scoreText.text = "0";
+        recordText.text = PlayerPrefs.GetInt("Record", 0).ToString();
+        scoreText.text = "0";
     }
 
     void OnDestroy()
